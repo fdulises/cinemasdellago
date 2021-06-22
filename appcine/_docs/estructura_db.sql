@@ -1,0 +1,115 @@
+/* ----- Estructura para las tablas del sitio ----- */
+CREATE TABLE IF NOT EXISTS st_site(
+	id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	title VARCHAR(30) NOT NULL DEFAULT '',
+	descrip VARCHAR(150) NOT NULL DEFAULT '',
+	url VARCHAR(70) NOT NULL DEFAULT '',
+	email VARCHAR(60) NOT NULL DEFAULT 'no_responder@localhost',
+	theme_name VARCHAR(30) NOT NULL DEFAULT 'default',
+	theme_dir VARCHAR(40) NOT NULL DEFAULT 'tema',
+	conf_session_attempts INT(2) NOT NULL DEFAULT 10,
+	cms_info VARCHAR(70) NOT NULL DEFAULT '',
+	cms_version VARCHAR(30) NOT NULL DEFAULT '',
+	cms_updated DATETIME NOT NULL DEFAULT '2017-01-01 00:00:00',
+	total_user INT(11) NOT NULL DEFAULT 1,
+	total_page INT(7) NOT NULL DEFAULT 0,
+	total_post INT(7) NOT NULL DEFAULT 0,
+	total_cat INT(7) NOT NULL DEFAULT 0,
+	total_tag INT(7) NOT NULL DEFAULT 0
+)DEFAULT CHARSET = UTF8;
+
+/* ----- Estructura para las tablas de entradas ----- */
+CREATE TABLE IF NOT EXISTS st_posts(
+	id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	title VARCHAR(70) NOT NULL DEFAULT '',
+	slug VARCHAR(150) NOT NULL DEFAULT '',
+	created DATETIME NOT NULL DEFAULT '2017-01-01 00:00:00',
+	updated DATETIME NOT NULL DEFAULT '2017-01-01 00:00:00',
+	descrip VARCHAR(250) NOT NULL DEFAULT '',
+	content TEXT NOT NULL,
+	cat INT(11) NOT NULL DEFAULT 0,
+	superior INT(11) NOT NULL DEFAULT 0,
+	tags VARCHAR(250) NOT NULL DEFAULT '',
+	cover VARCHAR(250) NOT NULL DEFAULT '',
+	autor INT(11) NOT NULL DEFAULT 1,
+	state INT(1) NOT NULL DEFAULT 1,
+	type INT(2) NOT NULL DEFAULT 1,
+	template VARCHAR(30) NOT NULL DEFAULT '',
+	hits INT(10) NOT NULL DEFAULT 0,
+	trailer TEXT NOT NULL,
+	directores TEXT NOT NULL,
+	reparto TEXT NOT NULL,
+	clasificacion INT(3) NOT NULL DEFAULT 0,
+	duracion INT(3) NOT NULL DEFAULT 0,
+	title_en VARCHAR(70) NOT NULL DEFAULT '',
+	descrip_en VARCHAR(250) NOT NULL DEFAULT '',
+	content_en TEXT NOT NULL,
+	FULLTEXT(title,descrip)
+)ENGINE = MYISAM DEFAULT CHARSET = UTF8;
+CREATE TABLE IF NOT EXISTS st_cats(
+	id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(70) NOT NULL DEFAULT '',
+	slug VARCHAR(70) NOT NULL DEFAULT '',
+	descrip VARCHAR(70) NOT NULL DEFAULT '',
+	type INT(1) NOT NULL DEFAULT 1,
+	superior INT(11) NOT NULL DEFAULT 0,
+	state INT(1) NOT NULL DEFAULT 1,
+	created DATETIME NOT NULL DEFAULT '2017-01-01 00:00:00',
+	updated DATETIME NOT NULL DEFAULT '2017-01-01 00:00:00',
+	total_post INT(7) NOT NULL DEFAULT 0
+)DEFAULT CHARSET = UTF8;
+CREATE TABLE IF NOT EXISTS st_schedules(
+	id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	post_id INT(11) NOT NULL DEFAULT 0,
+	state INT(1) NOT NULL DEFAULT 1,
+	sc_d INT(2) NOT NULL DEFAULT 0,
+	sc_h INT(2) NOT NULL DEFAULT 0,
+	sc_m INT(2) NOT NULL DEFAULT 0,
+	type INT(3) NOT NULL DEFAULT 0
+)DEFAULT CHARSET = UTF8;
+
+/* ----- Estructura para las tablas de usuario ----- */
+CREATE TABLE IF NOT EXISTS st_users(
+	id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	nickname VARCHAR(16) NOT NULL DEFAULT '',
+	email VARCHAR(50) NOT NULL DEFAULT '',
+	password CHAR(128) NOT NULL DEFAULT '',
+	salt CHAR(128) NOT NULL DEFAULT '',
+	ip VARCHAR(15) NOT NULL DEFAULT '',
+	created DATETIME NOT NULL DEFAULT '2017-01-01 00:00:00',
+	updated DATETIME NOT NULL DEFAULT '2017-01-01 00:00:00',
+	state INT(1) NOT NULL DEFAULT 1,
+	role INT(2) NOT NULL DEFAULT 1,
+	total_post INT(7) NOT NULL DEFAULT 0
+)DEFAULT CHARSET = UTF8;
+CREATE TABLE IF NOT EXISTS st_profiles(
+	id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(30) NOT NULL DEFAULT '',
+	gender INT(1) NOT NULL DEFAULT 0,
+	birthday DATETIME NOT NULL DEFAULT '2017-01-01 00:00:00',
+	descrip VARCHAR(250) NOT NULL DEFAULT '',
+	site VARCHAR(60) NOT NULL DEFAULT '',
+	s_facebook VARCHAR(60) NOT NULL DEFAULT '',
+	s_twitter VARCHAR(60) NOT NULL DEFAULT '',
+	s_google VARCHAR(60) NOT NULL DEFAULT '',
+	s_linkedin VARCHAR(60) NOT NULL DEFAULT ''
+)DEFAULT CHARSET = UTF8;
+CREATE TABLE IF NOT EXISTS st_session_attempts(
+	id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	time VARCHAR(10) NOT NULL DEFAULT '',
+	user INT(11) NOT NULL DEFAULT 0
+)DEFAULT CHARSET = UTF8;
+
+/* ---------- Datos por defecto ---------- */
+INSERT INTO st_site(title, descrip, url, cms_info, cms_version, cms_updated) VALUES(
+	'Appcine', 'Sistema de Gestión de contenidos', 'http://localhost/appcine',
+	'Appcine CMS', 'Alfa 1.0', '2017-06-11 00:00:00'
+);
+
+/* Creamos usuario admin por defecto con clave admin */
+INSERT INTO st_users(nickname, email, password, salt, state, role) VALUES(
+	'admin',
+	'admin@prueba.algo',	'de648649bb1acccba4296d124e2d82357155a959e3fe9c5bc7ead8b9af615dc6dc7e18f93a42fc63aebf0d759cee985f42f19f6e9440331c81b1c2e6e2999e60',	'9f10aacd148598a52ca030dfd716e2437d754927ab7bb26e21c2d6257224d1c7f9d3f0f8172c6a61981b478279bd011cc5d2be2216bbfcdf8e7e09b90c014684',
+	1, 1
+);
+INSERT INTO st_profiles(name) VALUES('Administrador');

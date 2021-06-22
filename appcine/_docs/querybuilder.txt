@@ -1,0 +1,94 @@
+<?php
+
+/*
+* Opciones para Clausula insert
+*/
+	
+//Insertar nuevo registro
+DB::insert('usuarios_mock')
+	->columns(['nickname', 'email', 'registro', 'estado', 'grupo'])
+	->values(['lorem', 'lorem@debred.com', date('Y-m-d'), 3, 1])
+	->send();
+
+//Insertar multiples registros
+DB::insert('usuarios_mock')
+	->columns(['nickname', 'email', 'registro', 'estado', 'grupo'])
+	->values([
+		['lorem1', 'lorem1@debred.com', date('Y-m-d'), 1, 1],
+		['lorem2', 'lorem2@debred.com', date('Y-m-d'), 3, 2],
+		['lorem3', 'lorem3@debred.com', date('Y-m-d'), 3, 2]
+	])->send();
+
+
+
+/*
+* Opciones para Clausula Select
+*/
+
+//Recuperar primera fila de una tabla
+DB::select('usuarios_mock')->first();
+
+//Recuperar todas las filas de una tabla
+DB::select('usuarios_mock')->get();
+
+//Recuperar valores de una lista de columnas
+DB::select('usuarios_mock')->columns(['id', 'nickname', 'email'])->get();
+
+//Recuperar informacion usando la clausula where
+DB::select('usuarios_mock')->where('grupo', '=', 2)->get();
+DB::select('usuarios_mock')->where('grupo', '=', 1)->orWhere('grupo', '=', 2)->get();
+
+//Usar condiciones anidadas en la clausula where
+DB::select('usuarios_mock')->where(function( $query ){
+	$query->where('grupo', '=', 1)->orWhere('grupo', '=', 2);
+})->get();
+
+//Busqueda Fullindex
+DB::select('usuarios_mock')
+	->fullTextSearch(['campo1', 'campo2'], 'lorem ipsum dolor', 'score')
+	->get();
+
+
+	
+/*
+* Opciones para Clausula delete
+*/
+
+//Eliminar registro de una tabla
+DB::delete('usuarios_mock')
+	->where('nickname', '=', 'lorem')
+	->send();
+
+	
+	
+/*
+* Opciones para Clausula update
+*/
+	
+//Editar registros de una tabla
+DB::update('usuarios_mock')
+	->set(['estado'=>2)
+	->where('nickname', '=', 'lorem')
+	->send();
+	
+	
+/*
+* Opciones para Uniones
+*/
+
+//Recuperar registro de multiples tablas con join
+DB::select('usuarios_mock')
+	->join('usuarios_perfiles_mock', 'id', '=', 'uid')
+	->get();
+
+//Editar registro de multiples tablas
+DB::update('usuarios_mock')
+	->rightJoin('usuarios_perfiles_mock', 'id', '=', 'uid')
+	->set(['estado'=>2, 'nombre'=>'sit'])
+	->where('nickname', '=', 'lorem')
+	->send();
+	
+//Eliminar registro de multiples tablas
+DB::delete('usuarios_mock')
+	->leftJoin('usuarios_perfiles_mock', 'id', '=', 'uid')
+	->send();
